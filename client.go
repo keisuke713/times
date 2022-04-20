@@ -13,39 +13,17 @@ import (
 
 type Slack struct {
 	BaseURL string
-	token   string
-	channel string
+	Token   string
+	Channel string
 }
 
-type SOp func(*Slack) error
-
-func NewSlack(ops ...SOp) (*Slack, error) {
+func NewSlack() (*Slack, error) {
 	s := &Slack{
 		BaseURL: "https://slack.com/api",
-	}
-	for _, op := range ops {
-		if err := op(s); err != nil {
-			return nil, err
-		}
+		Token:   os.Getenv("SLACK_API_TOKEN"),
+		Channel: os.Getenv("TIMES"),
 	}
 	return s, nil
-}
-
-func fillAuth(token, channel string) func(s *Slack) error {
-	return func(s *Slack) error {
-		s.token = token
-		s.channel = channel
-		return nil
-	}
-}
-
-func (s *Slack) Auth() error {
-	fmt.Println("Auth")
-	url := s.BaseURL + "/auth.test"
-	resp, err := http.Get(url)
-	fmt.Println(resp)
-	fmt.Println(err)
-	return nil
 }
 
 // type PostForm struct {
@@ -58,6 +36,7 @@ func (s *Slack) PostMessage(args []string) error {
 	if len(args) < 3 {
 		return fmt.Errorf("expect more than 3 argument, get %s", strconv.Itoa(len(args)))
 	}
+	// todo return error if argument is more than 5
 
 	// ここからはまだ未検証
 	// pf := PostForm{
@@ -93,8 +72,8 @@ func (s *Slack) PostMessage(args []string) error {
 
 	// 以下は正常に動く
 	form := url.Values{}
-	form.Add("token", os.Getenv("SLACK_API_TOKEN"))
-	form.Add("channel", os.Getenv("TIMES"))
+	form.Add("token", s.Token)
+	form.Add("channel", s.Channel)
 	form.Add("text", args[2])
 	body := strings.NewReader(form.Encode())
 
@@ -155,8 +134,4 @@ func (s *Slack) auth() error {
 	fmt.Println(sb)
 	defer resp.Body.Close()
 	return nil
-}
-
-func (s *Slack) channelId() string {
-	return ""
 }
