@@ -18,11 +18,22 @@ type Slack struct {
 }
 
 func NewSlack() (*Slack, error) {
+	token := os.Getenv("SLACK_API_TOKEN")
+	if token == "" {
+		return nil, fmt.Errorf("not exist token")
+	}
+
+	channel := os.Getenv("TIMES")
+	if channel == "" {
+		return nil, fmt.Errorf("not exist channel")
+	}
+
 	s := &Slack{
 		BaseURL: "https://slack.com/api",
-		Token:   os.Getenv("SLACK_API_TOKEN"),
-		Channel: os.Getenv("TIMES"),
+		Token:   token,
+		Channel: channel,
 	}
+
 	return s, nil
 }
 
