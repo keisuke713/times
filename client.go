@@ -45,9 +45,12 @@ func NewSlack() (*Slack, error) {
 
 func (s *Slack) PostMessage(args []string) error {
 	if len(args) < 3 {
-		return fmt.Errorf("expect more than 3 argument, get %s", strconv.Itoa(len(args)))
+		return fmt.Errorf("expect more than 1 argument, get %s", strconv.Itoa(len(args)-2))
 	}
 	// todo return error if argument is more than 5
+	if len(args) > 4 {
+		return fmt.Errorf("too much argument. must be either 1 or 2 argument")
+	}
 
 	// ここからはまだ未検証
 	// pf := PostForm{
@@ -120,8 +123,8 @@ func (s *Slack) PostMessage(args []string) error {
 	return nil
 }
 
-func (s *Slack) History() []string {
-	return []string{}
+func (s *Slack) History() error {
+	return nil
 }
 
 func (s *Slack) auth() error {
