@@ -7,15 +7,15 @@ import (
 type PostCmd struct{}
 
 func (p *PostCmd) Name() string {
-	return "post"
+	return "Post"
+}
+
+func (p *PostCmd) Usage() string {
+	return "posts message to times channel"
 }
 
 func (p *PostCmd) MaxArg() int {
 	return 2
-}
-
-func (p *PostCmd) Usage() string {
-	return "post message to times channel via terminal"
 }
 
 func (p *PostCmd) Run(out io.Writer, args []string) error {

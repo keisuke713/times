@@ -22,4 +22,5 @@ type Cmd interface {
 
 var CmdMap = map[CmdName]Cmd{
 	POST: &PostCmd{},
+	HELP: &HelpCmd{},
 }

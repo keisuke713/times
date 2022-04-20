@@ -59,7 +59,6 @@ func main() {
 	// fmt.Println("succesfully post messages!!!!!!!")
 
 	// todo
-	// help comamnd作る
 	// history command作る
 	// postにオプションつける
 
@@ -72,14 +71,17 @@ func main() {
 
 func run(stdout, stderr io.Writer, args []string) error {
 	if len(args) < 2 {
-		// or description
+		cmd := &times.HelpCmd{}
+		if err := cmd.Run(stdout, []string{}); err != nil {
+			return fmt.Errorf("help command is faild: %w", err)
+		}
 		return nil
 	}
 
 	sub := args[1]
 	if cmd, ok := times.CmdMap[times.CmdName(sub)]; ok {
 		if err := cmd.Run(stdout, args); err != nil {
-			return fmt.Errorf("%q command failed: %q", sub, err)
+			return fmt.Errorf("%q command is failed: %q", sub, err)
 		}
 	} else {
 		return fmt.Errorf("unkown command %q", sub)
