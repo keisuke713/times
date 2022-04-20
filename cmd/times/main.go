@@ -59,8 +59,8 @@ func main() {
 	// fmt.Println("succesfully post messages!!!!!!!")
 
 	// todo
-	// history command作る
-	// postにオプションつける
+	history command作る
+	postにオプションつける
 
 	// 本番は必要
 	if err := run(os.Stdout, os.Stderr, os.Args); err != nil {

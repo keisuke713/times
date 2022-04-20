@@ -22,7 +22,7 @@ func (p *HelpCmd) MaxArg() int {
 }
 
 var desc = `
-Usage: times is to post message for times channel hoge hoge
+Usage: Times is incredibly cli tool that enable us to post message to times channel
 
 SubCommands:
 `
