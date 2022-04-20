@@ -58,6 +58,11 @@ func main() {
 
 	// fmt.Println("succesfully post messages!!!!!!!")
 
+	// todo
+	// help comamnd作る
+	// history command作る
+	// postにオプションつける
+
 	// 本番は必要
 	if err := run(os.Stdout, os.Stderr, os.Args); err != nil {
 		fmt.Fprintf(os.Stderr, "%v \n", err)
