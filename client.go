@@ -1,6 +1,7 @@
 package times
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -54,7 +55,6 @@ func (s *Slack) Auth() error {
 // }
 
 func (s *Slack) PostMessage(args []string) error {
-	// 水曜日はjsonで呼び出すのが目標！
 	if len(args) < 3 {
 		return fmt.Errorf("expect more than 3 argument, get %s", strconv.Itoa(len(args)))
 	}
@@ -113,11 +113,18 @@ func (s *Slack) PostMessage(args []string) error {
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("Error: status code", resp.StatusCode)
+	}
 
 	respBody, _ := ioutil.ReadAll(resp.Body)
-	defer resp.Body.Close()
-	sb := string(respBody)
-	fmt.Println(sb)
+	var resBodyMap map[string]interface{}
+	json.Unmarshal(respBody, &resBodyMap)
+	if resBodyMap["error"] != nil {
+		return fmt.Errorf("%s", resBodyMap["error"])
+	}
 
 	fmt.Println("succesfully post message!!!!!!!")
 	return nil
