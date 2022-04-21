@@ -123,8 +123,96 @@ func (s *Slack) PostMessage(args []string) error {
 	return nil
 }
 
-func (s *Slack) History() error {
+func (s *Slack) History(args []string) error {
+	if len(args) > 4 {
+		return fmt.Errorf("too much argument. must be either 1 or 2 argument")
+	}
+
+	timesId, err := s.timedId()
+	if err != nil {
+		return err
+	}
+
+	form := url.Values{}
+	form.Add("token", s.Token)
+	form.Add("channel", timesId)
+	body := strings.NewReader(form.Encode())
+
+	req, err := http.NewRequest(
+		http.MethodPost,
+		s.BaseURL+"/conversations.history",
+		body,
+	)
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("Error: status code", resp.StatusCode)
+	}
+
+	respBody, _ := ioutil.ReadAll(resp.Body)
+	var messages Messages
+	json.Unmarshal(respBody, &messages)
+	if messages.Error != "" {
+		return fmt.Errorf("%s", messages.Error)
+	}
+
+	for _, msg := range messages.Messages {
+		fmt.Println(msg.Text)
+	}
+	fmt.Printf("total %d posts", len(messages.Messages))
+
 	return nil
+}
+
+func (s *Slack) timedId() (string, error) {
+	form := url.Values{}
+	form.Add("token", s.Token)
+	body := strings.NewReader(form.Encode())
+
+	req, err := http.NewRequest(
+		http.MethodPost,
+		s.BaseURL+"/conversations.list",
+		body,
+	)
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("Error: status code", resp.StatusCode)
+	}
+
+	respBody, _ := ioutil.ReadAll(resp.Body)
+	var channels Channels
+	json.Unmarshal(respBody, &channels)
+	if channels.Error != "" {
+		return "", fmt.Errorf("%s", channels.Error)
+	}
+
+	timedId := channels.TimesId(s.Channel)
+	if timedId == "" {
+		return "", fmt.Errorf("channel not found")
+	}
+
+	return timedId, nil
 }
 
 func (s *Slack) auth() error {
