@@ -124,8 +124,9 @@ func (s *Slack) PostMessage(args []string) error {
 }
 
 func (s *Slack) History(args []string) error {
-	if len(args) > 4 {
-		return fmt.Errorf("too much argument. must be either 1 or 2 argument")
+	hisotryCnt, err := s.hisotryCnt(args)
+	if err != nil {
+		return fmt.Errorf("%s", err)
 	}
 
 	timesId, err := s.timedId()
@@ -166,10 +167,17 @@ func (s *Slack) History(args []string) error {
 		return fmt.Errorf("%s", messages.Error)
 	}
 
-	for _, msg := range messages.Messages {
+	messagesLen := len(messages.Messages)
+
+	start := hisotryCnt - 1
+	if start >= messagesLen {
+		start = messagesLen - 1
+	}
+
+	for i := start; 0<=i; i-- {
+		msg := messages.Messages[i]
 		fmt.Println(msg.Text)
 	}
-	fmt.Printf("total %d posts", len(messages.Messages))
 
 	return nil
 }
@@ -213,6 +221,17 @@ func (s *Slack) timedId() (string, error) {
 	}
 
 	return timedId, nil
+}
+
+func (s *Slack) hisotryCnt(args []string) (int, error) {
+	switch len(args) {
+	case 2:
+		return DEFAULT_HISTORY_CNT, nil
+	case 3:
+		return strconv.Atoi(args[2])
+	default:
+		return 0, fmt.Errorf("too much argument. must be 1 argument")
+	}
 }
 
 func (s *Slack) auth() error {

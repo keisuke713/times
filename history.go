@@ -4,6 +4,10 @@ import (
 	"io"
 )
 
+const (
+	DEFAULT_HISTORY_CNT = 5
+)
+
 type HistoryCmd struct{}
 
 func (h *HistoryCmd) Name() string {
