@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strconv"
 	"strings"
 	"bytes"
 )
@@ -38,23 +37,10 @@ func NewSlack() (*Slack, error) {
 	return s, nil
 }
 
-type MessageForm struct {
-	Channel string `json:"channel"`
-	Text    string `json:"text"`
-}
-
 func (s *Slack) PostMessage(args []string) error {
-	if len(args) < 3 {
-		return fmt.Errorf("expect more than 1 argument, get %s", strconv.Itoa(len(args)-2))
-	}
-	// todo return error if argument is more than 5
-	if len(args) > 4 {
-		return fmt.Errorf("too much argument. must be either 1 or 2 argument")
-	}
-
-	mf := MessageForm{
-		Channel: s.Channel,
-		Text:    args[2],
+	mf, err := NewMessageForm(s.Channel, args[2:])
+	if err != nil {
+		return err
 	}
 
 	body, err := json.Marshal(mf)
@@ -64,7 +50,7 @@ func (s *Slack) PostMessage(args []string) error {
 	req, err := http.NewRequest(http.MethodPost, s.BaseURL+"/chat.postMessage", bytes.NewBuffer(body))
 	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	bearer := "Bearer " + s.Token
-	req.Header.Add("authorization", bearer)
+	req.Header.Add("Authorization", bearer)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)

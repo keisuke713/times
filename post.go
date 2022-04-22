@@ -2,6 +2,12 @@ package times
 
 import (
 	"io"
+	"fmt"
+	"strings"
+)
+
+const (
+	BREAK = "\n"
 )
 
 type PostCmd struct{}
@@ -29,4 +35,20 @@ func (p *PostCmd) Run(out io.Writer, args []string) error {
 	}
 
 	return nil
+}
+
+type MessageForm struct {
+	Channel string `json:"channel"`
+	Text string `json:"text"`
+}
+
+func NewMessageForm(channel string, args []string) (*MessageForm, error) {
+	if len(args) < 1 {
+		return nil, fmt.Errorf("expect more than 1 argument, get 0")
+	}
+
+	return &MessageForm{
+		Channel: channel,
+		Text: strings.Join(args, BREAK),
+	}, nil
 }
