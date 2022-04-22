@@ -94,14 +94,16 @@ func (s *Slack) History(args []string) error {
 		return fmt.Errorf("%s", err)
 	}
 
-	timesId, err := s.timedId()
+	timesId, err := s.timesId()
 	if err != nil {
 		return err
 	}
 
+	// working
 	form := url.Values{}
 	form.Add("token", s.Token)
-	form.Add("channel", timesId)
+	form.Add("channel", timesId.Channel)
+	form.Add("limit", hisotryCnt)
 	body := strings.NewReader(form.Encode())
 
 	req, err := http.NewRequest(
@@ -114,6 +116,23 @@ func (s *Slack) History(args []string) error {
 	}
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	// ti := TimesId{
+	// 	Channel: timesId.Channel,
+	//  Limit: hisotryCnt,
+	// }
+
+	// body, err := json.Marshal(ti)
+	// fmt.Println(timesId)
+	// if err != nil {
+	// 	return err
+	// }
+	// req, err := http.NewRequest(http.MethodGet, s.BaseURL+"/conversations.history", bytes.NewBuffer(body))
+	// req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	// bearer := "Bearer " + s.Token
+	// req.Header.Add("authorization", bearer)
+
+	// common
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -131,15 +150,11 @@ func (s *Slack) History(args []string) error {
 	if messages.Error != "" {
 		return fmt.Errorf("%s", messages.Error)
 	}
+	fmt.Println(messages)
 
 	messagesLen := len(messages.Messages)
 
-	start := hisotryCnt - 1
-	if start >= messagesLen {
-		start = messagesLen - 1
-	}
-
-	for i := start; 0<=i; i-- {
+	for i := messagesLen-1; 0<=i; i-- {
 		msg := messages.Messages[i]
 		fmt.Println(msg.Text)
 	}
@@ -147,55 +162,41 @@ func (s *Slack) History(args []string) error {
 	return nil
 }
 
-func (s *Slack) timedId() (string, error) {
-	form := url.Values{}
-	form.Add("token", s.Token)
-	body := strings.NewReader(form.Encode())
+func (s *Slack) timesId() (*TimesId, error) {
+	req, err := http.NewRequest(http.MethodGet, s.BaseURL+"/conversations.list", nil)
+	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	bearer := "Bearer " + s.Token
+	req.Header.Add("authorization", bearer)
 
-	req, err := http.NewRequest(
-		http.MethodPost,
-		s.BaseURL+"/conversations.list",
-		body,
-	)
-	if err != nil {
-		return "", err
-	}
-
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("Error: status code", resp.StatusCode)
+		return nil, fmt.Errorf("Error: status code", resp.StatusCode)
 	}
 
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	var channels Channels
 	json.Unmarshal(respBody, &channels)
 	if channels.Error != "" {
-		return "", fmt.Errorf("%s", channels.Error)
+		return nil, fmt.Errorf("%s", channels.Error)
 	}
 
-	timedId := channels.TimesId(s.Channel)
-	if timedId == "" {
-		return "", fmt.Errorf("channel not found")
-	}
-
-	return timedId, nil
+	return channels.NewTimesId(s.Channel)
 }
 
-func (s *Slack) hisotryCnt(args []string) (int, error) {
+func (s *Slack) hisotryCnt(args []string) (string, error) {
 	switch len(args) {
 	case 2:
 		return DEFAULT_HISTORY_CNT, nil
 	case 3:
-		return strconv.Atoi(args[2])
+		return args[2], nil
 	default:
-		return 0, fmt.Errorf("too much argument. must be 1 argument")
+		return "", fmt.Errorf("too much argument. must be 1 argument")
 	}
 }
 

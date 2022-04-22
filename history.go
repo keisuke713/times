@@ -2,10 +2,11 @@ package times
 
 import (
 	"io"
+	"fmt"
 )
 
 const (
-	DEFAULT_HISTORY_CNT = 5
+	DEFAULT_HISTORY_CNT = "5"
 )
 
 type HistoryCmd struct{}
@@ -54,6 +55,17 @@ func (c *Channels) TimesId(name string) string {
 	return ""
 }
 
+func (c *Channels) NewTimesId(name string) (*TimesId, error) {
+	for _, ch := range c.Channels {
+		if ch.Name == name {
+			return &TimesId{
+				Channel: ch.Id,
+			}, nil
+		}
+	}
+	return nil, fmt.Errorf("%s", "channel_not_found")
+} 
+
 type Message struct {
 	Text string `json:"text"`
 }
@@ -61,4 +73,9 @@ type Message struct {
 type Messages struct {
 	Error    string    `json:"error"`
 	Messages []Message `json:"messages"`
+}
+
+type TimesId struct {
+	Channel string `json:"channel"`
+	Limit string `json:"limit"`
 }
