@@ -59,8 +59,11 @@ func main() {
 	// fmt.Println("succesfully post messages!!!!!!!")
 
 	// todo
-	// history command作る
+	// headerにつけてみる、getとjsonを試してみる
+	// 新しいものを下にくるようにする
+	// 件数制限、日付で区切る？
 	// postにオプションつける
+	// スレッド
 
 	// 本番は必要
 	if err := run(os.Stdout, os.Stderr, os.Args); err != nil {
