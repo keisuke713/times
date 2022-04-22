@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"bytes"
 )
 
 type Slack struct {
@@ -37,11 +38,10 @@ func NewSlack() (*Slack, error) {
 	return s, nil
 }
 
-// type PostForm struct {
-// 	Token   string `json:"token"`
-// 	Channel string `json:"channel"`
-// 	Text    string `json:"text"`
-// }
+type MessageForm struct {
+	Channel string `json:"channel"`
+	Text    string `json:"text"`
+}
 
 func (s *Slack) PostMessage(args []string) error {
 	if len(args) < 3 {
@@ -52,55 +52,20 @@ func (s *Slack) PostMessage(args []string) error {
 		return fmt.Errorf("too much argument. must be either 1 or 2 argument")
 	}
 
-	// ここからはまだ未検証
-	// pf := PostForm{
-	// 	Token:   os.Getenv("SLACK_API_TOKEN"),
-	// 	Channel: os.Getenv("TIMES"),
-	// 	Text:    args[2],
-	// }
+	mf := MessageForm{
+		Channel: s.Channel,
+		Text:    args[2],
+	}
 
-	// body, err := json.Marshal(pf)
-	// if err != nil {
-	// 	return err
-	// }
-	// req, err := http.NewRequest(http.MethodPost, s.BaseURL+"/chat.postMessage", bytes.NewBuffer(body))
-	// req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-
-	// cli := &http.Client{}
-	// resp, err := cli.Do(req)
-	// // resp, err := http.Post(s.BaseURL+"/chat.postMessage", "application/json; charset=utf-8", bytes.NewBuffer(body))
-	// if err != nil {
-	// 	return err
-	// }
-	// defer resp.Body.Close()
-	// fmt.Println("============")
-
-	// res, _ := ioutil.ReadAll(resp.Body)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// jsonStr := string(res)
-	// fmt.Println("Response: ", jsonStr)
-	// return nil
-
-	// 以下は正常に動く
-	form := url.Values{}
-	form.Add("token", s.Token)
-	form.Add("channel", s.Channel)
-	form.Add("text", args[2])
-	body := strings.NewReader(form.Encode())
-
-	req, err := http.NewRequest(
-		http.MethodPost,
-		s.BaseURL+"/chat.postMessage",
-		body,
-	)
+	body, err := json.Marshal(mf)
 	if err != nil {
 		return err
 	}
+	req, err := http.NewRequest(http.MethodPost, s.BaseURL+"/chat.postMessage", bytes.NewBuffer(body))
+	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	bearer := "Bearer " + s.Token
+	req.Header.Add("authorization", bearer)
 
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
