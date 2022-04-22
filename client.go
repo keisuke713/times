@@ -99,7 +99,6 @@ func (s *Slack) History(args []string) error {
 		return err
 	}
 
-	// working
 	form := url.Values{}
 	form.Add("token", s.Token)
 	form.Add("channel", timesId.Channel)
@@ -117,22 +116,6 @@ func (s *Slack) History(args []string) error {
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	// ti := TimesId{
-	// 	Channel: timesId.Channel,
-	//  Limit: hisotryCnt,
-	// }
-
-	// body, err := json.Marshal(ti)
-	// fmt.Println(timesId)
-	// if err != nil {
-	// 	return err
-	// }
-	// req, err := http.NewRequest(http.MethodGet, s.BaseURL+"/conversations.history", bytes.NewBuffer(body))
-	// req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-	// bearer := "Bearer " + s.Token
-	// req.Header.Add("authorization", bearer)
-
-	// common
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -150,7 +133,6 @@ func (s *Slack) History(args []string) error {
 	if messages.Error != "" {
 		return fmt.Errorf("%s", messages.Error)
 	}
-	fmt.Println(messages)
 
 	messagesLen := len(messages.Messages)
 
@@ -163,10 +145,21 @@ func (s *Slack) History(args []string) error {
 }
 
 func (s *Slack) timesId() (*TimesId, error) {
-	req, err := http.NewRequest(http.MethodGet, s.BaseURL+"/conversations.list", nil)
-	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-	bearer := "Bearer " + s.Token
-	req.Header.Add("authorization", bearer)
+	form := url.Values{}
+	form.Add("token", s.Token)
+	body := strings.NewReader(form.Encode())
+
+	req, err := http.NewRequest(
+		http.MethodPost,
+		s.BaseURL+"/conversations.list",
+		body,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
