@@ -19,13 +19,15 @@ type Slack struct {
 
 func NewSlack() (*Slack, error) {
 	token := os.Getenv("SLACK_API_TOKEN")
+	// token := ""
 	if token == "" {
-		return nil, fmt.Errorf("not exist token")
+		return nil, &NotAuthedError{"not exist token"}
 	}
 
 	channel := os.Getenv("TIMES")
+	channel = ""
 	if channel == "" {
-		return nil, fmt.Errorf("not exist channel")
+		return nil, &ChannelNotFoundError{"not exist channel"}
 	}
 
 	s := &Slack{
