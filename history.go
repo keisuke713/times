@@ -14,11 +14,11 @@ var TIMES_ID_CACHE = map[string]*TimesId{}
 type HistoryCmd struct{}
 
 func (h *HistoryCmd) Name() string {
-	return "History"
+	return "history"
 }
 
 func (h *HistoryCmd) Usage() string {
-	return "shows messages you posted"
+	return "Show messages you posted"
 }
 
 func (h *HistoryCmd) MaxArg() int {

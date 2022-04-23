@@ -10,11 +10,11 @@ import (
 type HelpCmd struct{}
 
 func (p *HelpCmd) Name() string {
-	return "Help"
+	return "help"
 }
 
 func (p *HelpCmd) Usage() string {
-	return "shows usage"
+	return "Show usage"
 }
 
 func (p *HelpCmd) MaxArg() int {
@@ -22,7 +22,9 @@ func (p *HelpCmd) MaxArg() int {
 }
 
 var desc = `
-Usage: Times is incredibly cli tool that enable us to post message to times channel
+Description: Times is incredibly CLI tool that enable us to post message to times channel in slack
+
+usage: slack-times <subcommand> [<args>]
 
 SubCommands:
 `

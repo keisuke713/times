@@ -1,8 +1,8 @@
 package times
 
 import (
-	"io"
 	"fmt"
+	"io"
 	"strings"
 )
 
@@ -13,11 +13,11 @@ const (
 type PostCmd struct{}
 
 func (p *PostCmd) Name() string {
-	return "Post"
+	return "post"
 }
 
 func (p *PostCmd) Usage() string {
-	return "posts message to times channel"
+	return "Post message to times channel"
 }
 
 func (p *PostCmd) MaxArg() int {
@@ -39,7 +39,7 @@ func (p *PostCmd) Run(out io.Writer, args []string) error {
 
 type MessageForm struct {
 	Channel string `json:"channel"`
-	Text string `json:"text"`
+	Text    string `json:"text"`
 }
 
 func NewMessageForm(channel string, args []string) (*MessageForm, error) {
@@ -49,6 +49,6 @@ func NewMessageForm(channel string, args []string) (*MessageForm, error) {
 
 	return &MessageForm{
 		Channel: channel,
-		Text: strings.Join(args, BREAK),
+		Text:    strings.Join(args, BREAK),
 	}, nil
 }
