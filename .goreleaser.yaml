@@ -9,7 +9,7 @@ before:
 builds:
   -
     main: ./cmd/times
-    binary: keisuke
+    binary: slack-times
     env:
       - CGO_ENABLED=0
     goos:
