@@ -59,15 +59,19 @@ func main() {
 	// fmt.Println("succesfully post messages!!!!!!!")
 
 	// todo
-	// postのオプションでlinks、スレッド？
-	// readme書け
-	// オプションの説明わかりやすく
-	// 日付で区切る？
-	// スレッド
+	READMEをかけ、トークン取得の仕方（何のスコープが必要か）、環境変数のセット、各コマンドの説明
 
-	// 本番は必要
 	if err := run(os.Stdout, os.Stderr, os.Args); err != nil {
-		fmt.Fprintf(os.Stderr, "%v \n", err)
+		switch err := err.(type) {
+		case *times.NotAuthedError:
+			fmt.Fprintf(os.Stderr, "%v \n", err)
+			fmt.Fprintf(os.Stderr, "%v \n", "You should get and set slack api token to environment variable whose name is SLACK_API_TOKEN.  \nIf you don't know how to do it, please check out https://budougumi0617.github.io/2020/10/06/release_leetgode/#leetgode%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9")
+		case *times.ChannelNotFoundError:
+			fmt.Fprintf(os.Stderr, "%v \n", err)
+			fmt.Fprintf(os.Stderr, "%v \n", "You should set channel name to environment variable whose name is TIMES.  \n")
+		default:
+			fmt.Fprintf(os.Stderr, "%v \n", err)
+		}
 		os.Exit(ExitCodeParseFlagError)
 	}
 }
@@ -84,7 +88,14 @@ func run(stdout, stderr io.Writer, args []string) error {
 	sub := args[1]
 	if cmd, ok := times.CmdMap[times.CmdName(sub)]; ok {
 		if err := cmd.Run(stdout, args); err != nil {
-			return fmt.Errorf("%q command is failed: %q", sub, err)
+			switch err := err.(type) {
+			case *times.NotAuthedError:
+				return err.AddPreText(fmt.Sprintf("%q command is failed: ", sub))
+			case *times.ChannelNotFoundError:
+				return err.AddPreText(fmt.Sprintf("%q command is failed: ", sub))
+			default:
+				return fmt.Errorf("%q command is failed: %q", sub, err)
+			}
 		}
 	} else {
 		return fmt.Errorf("unkown command %q", sub)
