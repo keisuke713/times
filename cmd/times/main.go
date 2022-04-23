@@ -59,11 +59,12 @@ func main() {
 	// fmt.Println("succesfully post messages!!!!!!!")
 
 	// todo
-	readme書け
-	binary作れ
-	postにオプションつける?、コード->コードは冷静に考えたらターミナルであげるとかしないかww
-	日付で区切る？
-	スレッド
+	// postのオプションでlinks、スレッド？
+	// readme書け
+	// binary作れ
+	// postにオプションつける?、コード->コードは冷静に考えたらターミナルであげるとかしないかww
+	// 日付で区切る？
+	// スレッド
 
 	// 本番は必要
 	if err := run(os.Stdout, os.Stderr, os.Args); err != nil {

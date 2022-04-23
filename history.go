@@ -1,13 +1,15 @@
 package times
 
 import (
-	"io"
 	"fmt"
+	"io"
 )
 
 const (
 	DEFAULT_HISTORY_CNT = "5"
 )
+
+var TIMES_ID_CACHE = map[string]*TimesId{}
 
 type HistoryCmd struct{}
 
@@ -64,7 +66,7 @@ func (c *Channels) NewTimesId(name string) (*TimesId, error) {
 		}
 	}
 	return nil, fmt.Errorf("%s", "channel_not_found")
-} 
+}
 
 type Message struct {
 	Text string `json:"text"`
@@ -77,5 +79,5 @@ type Messages struct {
 
 type TimesId struct {
 	Channel string `json:"channel"`
-	Limit string `json:"limit"`
+	Limit   string `json:"limit"`
 }

@@ -1,6 +1,7 @@
 package times
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -8,7 +9,6 @@ import (
 	"net/url"
 	"os"
 	"strings"
-	"bytes"
 )
 
 type Slack struct {
@@ -122,7 +122,7 @@ func (s *Slack) History(args []string) error {
 
 	messagesLen := len(messages.Messages)
 
-	for i := messagesLen-1; 0<=i; i-- {
+	for i := messagesLen - 1; 0 <= i; i-- {
 		msg := messages.Messages[i]
 		fmt.Println(msg.Text)
 	}
@@ -131,6 +131,10 @@ func (s *Slack) History(args []string) error {
 }
 
 func (s *Slack) timesId() (*TimesId, error) {
+	if TIMES_ID_CACHE[s.Channel] != nil {
+		return TIMES_ID_CACHE[s.Channel], nil
+	}
+
 	form := url.Values{}
 	form.Add("token", s.Token)
 	body := strings.NewReader(form.Encode())
@@ -165,7 +169,11 @@ func (s *Slack) timesId() (*TimesId, error) {
 		return nil, fmt.Errorf("%s", channels.Error)
 	}
 
-	return channels.NewTimesId(s.Channel)
+	timesId, err := channels.NewTimesId(s.Channel)
+	if err == nil {
+		TIMES_ID_CACHE[s.Channel] = timesId
+	}
+	return timesId, err
 }
 
 func (s *Slack) hisotryCnt(args []string) (string, error) {
