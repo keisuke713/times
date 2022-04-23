@@ -183,7 +183,7 @@ func (s *Slack) hisotryCnt(args []string) (string, error) {
 	case 3:
 		return args[2], nil
 	default:
-		return "", fmt.Errorf("too much argument. must be 1 argument")
+		return "", fmt.Errorf("too much argument. must be less than 1 argument")
 	}
 }
 
