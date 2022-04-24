@@ -18,7 +18,7 @@ func (h *HistoryCmd) Name() string {
 }
 
 func (h *HistoryCmd) Usage() string {
-	return "Show messages you posted"
+	return "Show messages you posted. you can an option that specify limit for example 3, 10 and so on"
 }
 
 func (h *HistoryCmd) MaxArg() int {

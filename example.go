@@ -14,7 +14,7 @@ func (e *ExampleCmd) Name() string {
 }
 
 func (e *ExampleCmd) Usage() string {
-	return "Show example"
+	return "Show example."
 }
 
 func (e *ExampleCmd) MaxArg() int {

@@ -14,7 +14,7 @@ func (h *HelpCmd) Name() string {
 }
 
 func (h *HelpCmd) Usage() string {
-	return "Show usage"
+	return "Show usage."
 }
 
 func (h *HelpCmd) MaxArg() int {

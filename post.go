@@ -17,7 +17,7 @@ func (p *PostCmd) Name() string {
 }
 
 func (p *PostCmd) Usage() string {
-	return "Post message to times channel"
+	return "Post message to times channel. you must pass at least one message."
 }
 
 func (p *PostCmd) MaxArg() int {
@@ -38,7 +38,7 @@ func (p *PostCmd) Run(out io.Writer, args []string) error {
 }
 
 func (p *PostCmd) Example() string {
-	return "`slack-times post sentence1 sentence2`"
+	return "`slack-times post message1 message2 as much as you want`"
 }
 
 type MessageForm struct {
