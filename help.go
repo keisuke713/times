@@ -9,15 +9,15 @@ import (
 
 type HelpCmd struct{}
 
-func (p *HelpCmd) Name() string {
+func (h *HelpCmd) Name() string {
 	return "help"
 }
 
-func (p *HelpCmd) Usage() string {
+func (h *HelpCmd) Usage() string {
 	return "Show usage"
 }
 
-func (p *HelpCmd) MaxArg() int {
+func (h *HelpCmd) MaxArg() int {
 	return 0
 }
 
@@ -47,6 +47,10 @@ func ShowUsage(w io.Writer) error {
 	return tw.Flush()
 }
 
-func (p *HelpCmd) Run(out io.Writer, args []string) error {
+func (h *HelpCmd) Run(out io.Writer, args []string) error {
 	return ShowUsage(out)
+}
+
+func (h *HelpCmd) Example() string {
+	return "`slack-times help`"
 }

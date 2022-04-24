@@ -11,6 +11,7 @@ const (
 	POST    CmdName = "post"
 	HISTORY         = "history"
 	HELP            = "help"
+	EXAMPLE         = "example"
 )
 
 type Cmd interface {
@@ -18,10 +19,12 @@ type Cmd interface {
 	Usage() string
 	MaxArg() int
 	Run(io.Writer, []string) error
+	Example() string
 }
 
 var CmdMap = map[CmdName]Cmd{
 	POST:    &PostCmd{},
 	HISTORY: &HistoryCmd{},
 	HELP:    &HelpCmd{},
+	EXAMPLE: &ExampleCmd{},
 }

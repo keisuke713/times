@@ -38,6 +38,10 @@ func (h *HistoryCmd) Run(out io.Writer, args []string) error {
 	return nil
 }
 
+func (h *HistoryCmd) Example() string {
+	return "`slack-times history 5`"
+}
+
 type Channel struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`

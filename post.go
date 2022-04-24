@@ -37,6 +37,10 @@ func (p *PostCmd) Run(out io.Writer, args []string) error {
 	return nil
 }
 
+func (p *PostCmd) Example() string {
+	return "`slack-times post sentence1 sentence2`"
+}
+
 type MessageForm struct {
 	Channel string `json:"channel"`
 	Text    string `json:"text"`
