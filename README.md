@@ -36,9 +36,10 @@ export TIMES=${channle id that you wanna post message to}
 Usage: slack-times <subcomamnd> [<args>]
 
 SubCommands:
-    help    Show usage
-    history Show messages you posted
-    post    Post message to times channel
+    example Show example.
+    help    Show usage.
+    history Show messages you posted. you can pass an option that specify limit for example 3, 10 and so on
+    post    Post message to times channel. you must pass at least one message.
 ```
 
 ## Install
