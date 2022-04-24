@@ -41,3 +41,9 @@ SubCommands:
     post    Post message to times channel
 ```
 
+## Install
+You can download binary from [release page](https://github.com/keisuke713/times/releases) and place it in $PATH directory.
+If you don't know where $PATH is, type `echo $PATH`
+
+## Author
+[Keisuke Nebashi](https://github.com/keisuke713)
