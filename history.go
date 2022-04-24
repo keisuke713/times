@@ -14,7 +14,7 @@ var TIMES_ID_CACHE = map[string]*TimesId{}
 type HistoryCmd struct{}
 
 func (h *HistoryCmd) Name() string {
-	return "history"
+	return HISTORY
 }
 
 func (h *HistoryCmd) Usage() string {
@@ -39,7 +39,7 @@ func (h *HistoryCmd) Run(out io.Writer, args []string) error {
 }
 
 func (h *HistoryCmd) Example() string {
-	return "`slack-times history 5`"
+	return fmt.Sprintf("`%s %s 5`", BINARY_NAME, h.Name())
 }
 
 type Channel struct {

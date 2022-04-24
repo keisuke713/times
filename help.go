@@ -10,7 +10,7 @@ import (
 type HelpCmd struct{}
 
 func (h *HelpCmd) Name() string {
-	return "help"
+	return HELP
 }
 
 func (h *HelpCmd) Usage() string {
@@ -52,5 +52,5 @@ func (h *HelpCmd) Run(out io.Writer, args []string) error {
 }
 
 func (h *HelpCmd) Example() string {
-	return "`slack-times help`"
+	return fmt.Sprintf("`%s %s`", BINARY_NAME, h.Name())
 }

@@ -8,6 +8,10 @@ import (
 type CmdName string
 
 const (
+	BINARY_NAME = "slack-times"
+)
+
+const (
 	POST    CmdName = "post"
 	HISTORY         = "history"
 	HELP            = "help"

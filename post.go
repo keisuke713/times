@@ -13,7 +13,7 @@ const (
 type PostCmd struct{}
 
 func (p *PostCmd) Name() string {
-	return "post"
+	return string(POST)
 }
 
 func (p *PostCmd) Usage() string {
@@ -38,7 +38,7 @@ func (p *PostCmd) Run(out io.Writer, args []string) error {
 }
 
 func (p *PostCmd) Example() string {
-	return "`slack-times post message1 message2 as much as you want`"
+	return fmt.Sprintf("`%s %s message1 message2 as much as you want`", BINARY_NAME, p.Name())
 }
 
 type MessageForm struct {

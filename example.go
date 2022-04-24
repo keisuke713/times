@@ -10,7 +10,7 @@ import (
 type ExampleCmd struct{}
 
 func (e *ExampleCmd) Name() string {
-	return "example"
+	return EXAMPLE
 }
 
 func (e *ExampleCmd) Usage() string {
@@ -44,5 +44,5 @@ func (e *ExampleCmd) Run(out io.Writer, args []string) error {
 }
 
 func (e *ExampleCmd) Example() string {
-	return "`slack-times example`"
+	return fmt.Sprintf("`%s %s`", BINARY_NAME, e.Name())
 }
