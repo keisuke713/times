@@ -30,3 +30,14 @@ After clicking through one more green Install App to Workspace button, you'll ge
 export SLACK_API_TOKEN=${api token you got}
 export TIMES=${channle id that you wanna post message to}
 ```
+
+## Usage
+```
+Usage: slack-times <subcomamnd> [<args>]
+
+SubCommands:
+    help    Show usage
+    history Show messages you posted
+    post    Post message to times channel
+```
+

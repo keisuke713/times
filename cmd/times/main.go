@@ -59,7 +59,7 @@ func main() {
 	// fmt.Println("succesfully post messages!!!!!!!")
 
 	// todo
-	READMEをかけ、トークン取得の仕方（何のスコープが必要か）、環境変数のセット、各コマンドの説明
+	// READMEをかけ、トークン取得の仕方（何のスコープが必要か）、環境変数のセット、各コマンドの説明
 
 	if err := run(os.Stdout, os.Stderr, os.Args); err != nil {
 		switch err := err.(type) {
