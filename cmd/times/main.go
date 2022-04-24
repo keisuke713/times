@@ -65,7 +65,7 @@ func main() {
 		switch err := err.(type) {
 		case *times.NotAuthedError:
 			fmt.Fprintf(os.Stderr, "%v \n", err)
-			fmt.Fprintf(os.Stderr, "%v \n", "You should get and set slack api token to environment variable whose name is SLACK_API_TOKEN.  \nIf you don't know how to do it, please check out https://budougumi0617.github.io/2020/10/06/release_leetgode/#leetgode%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9")
+			fmt.Fprintf(os.Stderr, "%v \n", "You should get and set slack api token to environment variable whose name is SLACK_API_TOKEN.  \nIf you don't know how to do it, please check out https://github.com/keisuke713/times")
 		case *times.ChannelNotFoundError:
 			fmt.Fprintf(os.Stderr, "%v \n", err)
 			fmt.Fprintf(os.Stderr, "%v \n", "You should set channel name to environment variable whose name is TIMES.  \n")
